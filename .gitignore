@@ -4,3 +4,5 @@ bin/
 *.VC.db
 *.VC.opendb
 *.vcxproj.user
+bmi
+bmi.o
