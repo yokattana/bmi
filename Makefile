@@ -1,4 +1,6 @@
-CFLAGS += -std=c99
+VERSION ?= (git)
+
+CFLAGS += -std=c99 -DVERSION='"$(VERSION)"'
 
 all: bmi
 
