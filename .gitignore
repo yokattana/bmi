@@ -6,3 +6,16 @@ bin/
 *.vcxproj.user
 bmi
 bmi.o
+
+# autotools
+configure
+compile
+depcomp
+install-sh
+missing
+aclocal.m4
+Makefile.in
+config.log
+config.status
+autom4te.cache/
+.deps/

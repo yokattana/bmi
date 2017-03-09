@@ -3,32 +3,32 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifndef PROG_NAME
-#define PROG_NAME "bmi"
+#ifndef PACKAGE
+#define PACKAGE "bmi"
 #endif
 
-#ifndef PROG_VER
-#define PROG_VER "0.1"
+#ifndef VERSION
+#define VERSION "(git)"
 #endif
 
 static const char * const usage =
-PROG_NAME " " PROG_VER "\n\n"
+PACKAGE " " VERSION "\n\n"
 "Perform BMI calculations from the command line. Usage:\n\n"
-"  " PROG_NAME " -v|--version            print version number\n"
-"  " PROG_NAME " -h|--help               show this message\n"
-"  " PROG_NAME " [unit]                  print a BMI table\n"
-"  " PROG_NAME " <height> [unit]         print a BMI table with weights\n"
-"  " PROG_NAME " <height> <bmi> [unit]   calculate weight (in unit) for BMI\n"
-"  " PROG_NAME " <height> <weight>       calculate BMI\n\n"
+"  " PACKAGE " -v|--version            print version number\n"
+"  " PACKAGE " -h|--help               show this message\n"
+"  " PACKAGE " [unit]                  print a BMI table\n"
+"  " PACKAGE " <height> [unit]         print a BMI table with weights\n"
+"  " PACKAGE " <height> <bmi> [unit]   calculate weight (in unit) for BMI\n"
+"  " PACKAGE " <height> <weight>       calculate BMI\n\n"
 "Supported formats:\n\n"
 "  height: 180cm 1.8m 6ft 6ft0 6\' 6\'0 \n"
 "  weight: 80kg 175lb 175lbs 12.5st\n\n"
 "Examples:\n\n"
-"  " PROG_NAME " 180cm 80kg     24.7 normal\n"
-"  " PROG_NAME " 1.8m 23        75kg\n"
-"  " PROG_NAME " 180cm 23 st    11.8st\n"
-"  " PROG_NAME " 23 st 180cm    11.8st\n"
-"  " PROG_NAME " 180cm          (a table)\n";
+"  " PACKAGE " 180cm 80kg     24.7 normal\n"
+"  " PACKAGE " 1.8m 23        75kg\n"
+"  " PACKAGE " 180cm 23 st    11.8st\n"
+"  " PACKAGE " 23 st 180cm    11.8st\n"
+"  " PACKAGE " 180cm          (a table)\n";
 
 #define M_PER_CM 0.01
 #define M_PER_FT 0.3048
@@ -48,7 +48,7 @@ PROG_NAME " " PROG_VER "\n\n"
 static void check_unexpected_suffix(const char *str, const char *arg)
 {
 	if (str[0]) {
-		fprintf(stderr, PROG_NAME ": unexpected suffix in: %s", arg);
+		fprintf(stderr, PACKAGE ": unexpected suffix in: %s", arg);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -56,7 +56,7 @@ static void check_unexpected_suffix(const char *str, const char *arg)
 static void check_unset(double val, const char *valname, const char *arg)
 {
 	if (val) {
-		fprintf(stderr, PROG_NAME ": unexpected %s, already set: "
+		fprintf(stderr, PACKAGE ": unexpected %s, already set: "
 			"%s\n", valname, arg);
 		exit(EXIT_FAILURE);
 	}
@@ -67,7 +67,7 @@ static void check_weight_unset(double val, const char *unit, const char *arg)
 	if (val) {
 		check_unset(val, "weight", arg);
 	} else if (unit) {
-		fprintf(stderr, PROG_NAME ": unexpected weight, unit already "
+		fprintf(stderr, PACKAGE ": unexpected weight, unit already "
 			"set: %s\n", arg);
 		exit(EXIT_FAILURE);
 	}
@@ -92,7 +92,7 @@ static const char *weight_str(double val, int precision, const char *unit,
 	} else if (!strcmp("st", unit)) {
 		sprintf(buf, "%*.2f st", precision, val / KG_PER_ST);
 	} else {
-		fprintf(stderr, PROG_NAME ": unknown weight unit: %s\n",
+		fprintf(stderr, PACKAGE ": unknown weight unit: %s\n",
 			unit);
 		exit(EXIT_FAILURE);
 	}
@@ -113,13 +113,13 @@ int main(int argc, char **argv)
 	for (int i = 1; i < argc; i++) {
 		const char *arg = argv[i];
 		if (!strcmp(arg, "-v") || !strcmp(arg, "--version")) {
-			printf(PROG_NAME " " PROG_VER "\n");
+			printf(PACKAGE " " VERSION "\n");
 			exit(EXIT_SUCCESS);
 		} else if (!strcmp(arg, "-h") || !strcmp(arg, "--help")) {
 			printf("%s", usage);
 			exit(EXIT_SUCCESS);
 		} else if (arg[0] == '-') {
-			fprintf(stderr, PROG_NAME ": unknown argument: %s\n",
+			fprintf(stderr, PACKAGE ": unknown argument: %s\n",
 				arg);
 			exit(EXIT_FAILURE);
 		}
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 			weight_kg = val * KG_PER_ST;
 			weight_unit = rest;
 		} else if (!val) {
-			fprintf(stderr, PROG_NAME ": expecting a value: %s\n",
+			fprintf(stderr, PACKAGE ": expecting a value: %s\n",
 				arg);
 			exit(EXIT_FAILURE);
 		} else if (!rest[0]) {
@@ -165,14 +165,14 @@ int main(int argc, char **argv)
 			height_metric = false;
 			check_unexpected_suffix(rest, arg);
 		} else {
-			fprintf(stderr, PROG_NAME ": unknown unit type: %s\n",
+			fprintf(stderr, PACKAGE ": unknown unit type: %s\n",
 				arg);
 			exit(EXIT_FAILURE);
 		}
 	}
 
 	if (weight_kg && bmi) {
-		fprintf(stderr, PROG_NAME ": both weight and BMI given - "
+		fprintf(stderr, PACKAGE ": both weight and BMI given - "
 			"omit one or both.\n");
 		exit(EXIT_FAILURE);
 	} else if (height_m && weight_kg) {
@@ -224,11 +224,11 @@ int main(int argc, char **argv)
 			weight_str(BMI_OB3_MIN * height_m * height_m,
 				6, weight_unit, height_metric));
 	} else if (weight_kg || bmi) {
-		fprintf(stderr, PROG_NAME ": no height given.\n");
+		fprintf(stderr, PACKAGE ": no height given.\n");
 		exit(EXIT_FAILURE);
 	} else {
 		printf(
-			"Run  " PROG_NAME " -h  for usage information.\n\n"
+			"Run  " PACKAGE " -h  for usage information.\n\n"
 			" BMI   class\n"
 			"--------------------------------\n"
 			" 15    very severely underweight\n"
