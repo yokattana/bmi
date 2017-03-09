@@ -83,7 +83,7 @@ static const char *weight_str(double val, int precision, const char *unit,
 # pragma warning(disable: 4996)  /* unsafe sprintf */
 #endif
 
-	if ((!unit || !unit[0]) && default_metric || !strcmp("kg", unit)) {
+	if (((!unit || !unit[0]) && default_metric) || !strcmp("kg", unit)) {
 		sprintf(buf, "%*.1f kg", precision, val);
 	} else if ((!unit || !unit[0]) || !strcmp("lb", unit)) {
 		sprintf(buf, "%*.1f lb", precision, val / KG_PER_LB);
