@@ -1,0 +1,36 @@
+language: c
+
+matrix:
+  include:
+
+  - script:
+    - CC=gcc CFLAGS="$CFLAGS -m32" make all clean
+    - CC=gcc CFLAGS="$CFLAGS -m64" make all clean
+    - CC=arm-linux-gnueabihf-gcc make all clean
+    - CC=i686-w64-mingw32-gcc    make all clean
+    - CC=x86_64-w64-mingw32-gcc  make all clean
+    - CC=clang CFLAGS="$CFLAGS -target i386-linux-gnu"      make all clean
+    - CC=clang CFLAGS="$CFLAGS -target x86_64-linux-gnu"    make all clean
+    - CC=clang CFLAGS="$CFLAGS -target arm-linux-gnueabihf" make all clean
+    - autoreconf --install
+    - ./configure --host=i386-linux-gnu      && make all clean
+    - ./configure --host=x86_64-linux-gnu    && make all clean
+    - ./configure --host=arm-linux-gnueabihf && make all clean
+    - ./configure --host=i686-w64-mingw32    && make all clean
+    - ./configure --host=x86_64-w64-mingw32  && make all clean
+    addons:
+      apt:
+        packages:
+        - gcc-multilib
+        - libc6-dev-armhf-cross
+        - binutils-mingw-w64-i686
+        - binutils-mingw-w64-x86-64
+        - gcc-arm-linux-gnueabihf
+        - gcc-mingw-w64-i686
+        - gcc-mingw-w64-x86-64
+
+  - os: osx
+    compiler: clang
+    script:
+    - CFLAGS="$CFLAGS -arch i386 -arch x86_64" make all clean
+    - autoreconf --install && ./configure && make all clean
